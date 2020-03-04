@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, "http://172.17.32.107:8080/login", jsonObject, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, Constants.API_URL+"/login", jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {

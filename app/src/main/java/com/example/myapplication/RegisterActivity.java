@@ -73,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
 
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, "http://172.17.32.107:8080/register", jsonObject, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, Constants.API_URL+"/register", jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
