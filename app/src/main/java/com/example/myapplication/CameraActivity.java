@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Base64;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
@@ -32,6 +33,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,7 +48,9 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class CameraActivity extends AppCompatActivity {
@@ -67,6 +78,7 @@ public class CameraActivity extends AppCompatActivity {
     private File file;
     Handler mBackgroundHandler;
     HandlerThread mBackgroundThread;
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -287,14 +299,11 @@ public class CameraActivity extends AppCompatActivity {
 
                 byte[] bytes = new byte[buffer.capacity()];
                 buffer.get(bytes);
-                try {
-                    save(bytes);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if(image != null) {
-                        image.close();
-                    }
+
+                upload(bytes);
+
+                if(image != null) {
+                    image.close();
                 }
             }
         };
@@ -331,9 +340,36 @@ public class CameraActivity extends AppCompatActivity {
         }, mBackgroundHandler);
     }
 
-    private void save(byte[] bytes) throws IOException {
-        OutputStream outputStream = new FileOutputStream(file);
-        outputStream.write(bytes);
-        outputStream.close();
+    private void upload(byte[] bytes) {
+        final String imageAsString = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+        StringRequest request = new StringRequest(Request.Method.POST, Constants.API_URL + "/new-receipt", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(CameraActivity.this, "RESPONSE", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(CameraActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("image", imageAsString);
+                return params;
+            }
+        };
+
+        requestQueue = getRequestQueue();
+        requestQueue.add(request);
+    }
+
+    private RequestQueue getRequestQueue(){
+        if(requestQueue==null){
+            requestQueue = Volley.newRequestQueue(this);
+        }
+        return requestQueue;
     }
 }
