@@ -3,4 +3,6 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="login_button_text">Login</string>
+    <string name="shopping_list_text">Create shopping list</string>
+    <string name="upload_receipt_text">Upload receipt</string>
 </resources>

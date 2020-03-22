@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -81,11 +82,16 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            String uid = response.getString("user_id");
                             String token = response.getString("token");
                             sharedPreferences = getActivity().getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("token", token);
                             editor.apply();
+
+                            Intent i = new Intent(getActivity(), HomeActivity.class);
+                            i.putExtra(HomeFragment.EXTRA_USER_ID, uid);
+                            startActivity(i);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
