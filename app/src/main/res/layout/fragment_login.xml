@@ -7,7 +7,13 @@
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
-    <EditText
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/ic_launcher_round" />
+
+    <AutoCompleteTextView
         android:id="@+id/emailInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +22,9 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/email_hint"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:theme="@style/inputField"
+        />
 
     <EditText
         android:id="@+id/passwordInput"
@@ -27,7 +35,8 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/password_hint"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:theme="@style/inputField" />
 
     <Button
         android:id="@+id/loginButton"
@@ -36,7 +45,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/login_button_text" />
+        android:background="@drawable/custom_button"
+        android:text="@string/login_button_text"
+        android:textColor="#ffffff" />
 
     <TextView
         android:id="@+id/textView"
