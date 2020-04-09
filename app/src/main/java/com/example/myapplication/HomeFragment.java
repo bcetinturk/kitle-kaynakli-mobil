@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -34,6 +36,7 @@ public class HomeFragment extends Fragment {
     private User mUser;
 
     TextView mNameSurnameTV, mPointsTV;
+    Button mUploadReceipt;
 
     public HomeFragment() {}
 
@@ -102,6 +105,15 @@ public class HomeFragment extends Fragment {
 
         mNameSurnameTV = v.findViewById(R.id.name_surname_text_view);
         mPointsTV = v.findViewById(R.id.points_text_view);
+        mUploadReceipt = v.findViewById(R.id.upload_receipt_button);
+
+        mUploadReceipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), CameraActivity.class);
+                startActivity(i);
+            }
+        });
 
         return v;
     }
