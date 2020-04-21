@@ -22,13 +22,17 @@
             android:id="@+id/name_surname_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:fontFamily="sans-serif"
+            android:text="Barış Çetintürk"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/points_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="puan: 0" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,26 +51,207 @@
             android:id="@+id/shopping_list_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:text="@string/shopping_list_text" />
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:iconGravity="textStart"
+            android:background="@drawable/custom_button"
+            android:drawableStart="@drawable/ic_shopping_basket_black_24dp"
+            android:text="@string/shopping_list_text"
+            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/upload_receipt_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:layout_weight="1"
-            android:text="@string/upload_receipt_text" />
+            android:background="@drawable/custom_button"
+            android:drawableStart="@drawable/ic_add_circle_black_24dp"
+            android:text="@string/upload_receipt_text"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:src="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <Button
+            android:id="@+id/report_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:iconGravity="textStart"
+            android:background="@drawable/custom_button"
+            android:drawableStart="@drawable/ic_map_blue_24dp"
+            android:text="Marketleri gör"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/route_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button"
+            android:drawableStart="@drawable/ic_report_blue_24dp"
+            android:text="Aylık Rapor"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Son Alışverişler"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/crime_list_item_solved_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:text="78.56 TL"
+                android:padding="4dp"/>
+
+            <TextView
+                android:id="@+id/crime_list_item_title_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/crime_list_item_solved_checkbox"
+                android:text="Migros"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/crime_list_item_date_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/crime_list_item_title_textview"
+                android:layout_toStartOf="@id/crime_list_item_solved_checkbox"
+                android:text="11.04.2020"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp"
+                android:paddingRight="4dp"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/crime_list_item_solved_checkbox3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:text="20.45 TL"
+                android:padding="4dp"/>
+
+            <TextView
+                android:id="@+id/crime_list_item_title_textview3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/crime_list_item_solved_checkbox3"
+                android:text="A101"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/crime_list_item_date_textview3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/crime_list_item_title_textview3"
+                android:layout_toStartOf="@id/crime_list_item_solved_checkbox3"
+                android:text="09.04.2020"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp"
+                android:paddingRight="4dp"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/crime_list_item_solved_checkbox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:text="159.94 TL"
+                android:padding="4dp"/>
+
+            <TextView
+                android:id="@+id/crime_list_item_title_textview2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/crime_list_item_solved_checkbox2"
+                android:text="Migros"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/crime_list_item_date_textview2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/crime_list_item_title_textview2"
+                android:layout_toStartOf="@id/crime_list_item_solved_checkbox2"
+                android:text="29.03.2020"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp"
+                android:paddingRight="4dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

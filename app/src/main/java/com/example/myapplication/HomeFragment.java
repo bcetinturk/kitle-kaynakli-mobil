@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,11 +31,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +56,6 @@ public class HomeFragment extends Fragment {
 
     TextView mNameSurnameTV, mPointsTV;
     Button mUploadReceipt;
-    ImageView mImageView;
 
     private static final int PIC_ID = 500;
 
@@ -121,7 +128,6 @@ public class HomeFragment extends Fragment {
         mNameSurnameTV = v.findViewById(R.id.name_surname_text_view);
         mPointsTV = v.findViewById(R.id.points_text_view);
         mUploadReceipt = v.findViewById(R.id.upload_receipt_button);
-        mImageView = v.findViewById(R.id.imageView2);
 
         mUploadReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,18 +173,15 @@ public class HomeFragment extends Fragment {
     public String[] getImagePaths(Cursor cursor, int startPosition) {
 
         int size = cursor.getCount() - startPosition;
-
         if (size <= 0)
             return null;
 
         String[] paths = new String[size];
-
         int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
 
         for (int i = startPosition; i < cursor.getCount(); i++) {
 
             cursor.moveToPosition(i);
-
             paths[i - startPosition] = cursor.getString(dataColumnIndex);
         }
 
@@ -203,5 +206,34 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "Storage permission is necessary", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void uploadReceipt(String[] paths){
+        JSONObject object = new JSONObject();
+        JSONArray array = new JSONArray();
+        for(String path: paths){
+            File file = new File(path);
+            int size = (int) file.length();
+            byte[] bytes = new byte[size];
+            try {
+                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+                buf.read(bytes, 0, bytes.length);
+                buf.close();
+                String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+                array.put(base64);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            object.put("images", array);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestQueue queue = getRequestQueue();
+
     }
 }
