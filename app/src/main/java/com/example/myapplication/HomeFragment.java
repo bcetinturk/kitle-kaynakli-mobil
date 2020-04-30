@@ -46,8 +46,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HomeFragment extends Fragment {
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 
+public class HomeFragment extends Fragment {
+    private static final String TAG = "HomeFragment";
     public static final String EXTRA_USER_ID = "com.example.myapplication.user_id";
     private static final int CAMERA_PERMISSION = 1000;
     private RequestQueue requestQueue;
@@ -111,7 +117,7 @@ public class HomeFragment extends Fragment {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sp = getActivity().getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
                 String token = sp.getString("token", "");
-                Log.d("HomeFragment", "getParams: " + token);
+                Log.d(TAG, "getParams: " + token);
                 params.put("Authorization", "Bearer " + token);
                 return params;
             }
@@ -193,7 +199,7 @@ public class HomeFragment extends Fragment {
         Cursor cursor = loadCursor();
         String[] paths = getImagePaths(cursor, image_count_before);
         cursor.close();
-
+        uploadReceipt(paths);
     }
 
     @Override
@@ -208,32 +214,25 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public void uploadReceipt(String[] paths){
-        JSONObject object = new JSONObject();
-        JSONArray array = new JSONArray();
-        for(String path: paths){
-            File file = new File(path);
-            int size = (int) file.length();
-            byte[] bytes = new byte[size];
-            try {
-                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-                buf.read(bytes, 0, bytes.length);
-                buf.close();
-                String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
-                array.put(base64);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void uploadReceipt(String[] paths){
+        RestInterface service = Client.getClient().create(RestInterface.class);
+
+        File file = new File(paths[0]);
+        RequestBody requestBody = RequestBody.create(file, MediaType.get("image/*"));
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
+        Call<ReceiptResults> call = service.getReceiptResults(body);
+
+        call.enqueue(new Callback<ReceiptResults>() {
+            @Override
+            public void onResponse(Call<ReceiptResults> call, retrofit2.Response<ReceiptResults> response) {
+                Toast.makeText(getActivity(), "Done", Toast.LENGTH_SHORT).show();
             }
-        }
-        try {
-            object.put("images", array);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        RequestQueue queue = getRequestQueue();
-
+            @Override
+            public void onFailure(Call<ReceiptResults> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: "+t.getMessage());
+            }
+        });
     }
 }
