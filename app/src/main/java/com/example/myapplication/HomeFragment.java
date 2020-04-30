@@ -55,7 +55,6 @@ import retrofit2.Callback;
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     public static final String EXTRA_USER_ID = "com.example.myapplication.user_id";
-    private static final int CAMERA_PERMISSION = 1000;
     private RequestQueue requestQueue;
     private User mUser;
     private int image_count_before;
@@ -138,101 +137,12 @@ public class HomeFragment extends Fragment {
         mUploadReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                {
-                    String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
-                    ActivityCompat.requestPermissions(getActivity(), permissions, CAMERA_PERMISSION);
-                    return;
-                }
-
-                Cursor cursor = loadCursor();
-                image_count_before = cursor.getCount();
-                cursor.close();
-
-                Intent i = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-                startActivityForResult(i, PIC_ID);
+                Intent i = new Intent(getContext(), CameraActivity.class);
+                startActivity(i);
             }
         });
 
         return v;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PIC_ID) {
-            exitingCamera();
-        }
-    }
-
-    public Cursor loadCursor() {
-
-        final String[] columns = { MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media._ID };
-
-        final String orderBy = MediaStore.Images.Media.DATE_ADDED;
-
-        return getActivity().getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
-    }
-
-    public String[] getImagePaths(Cursor cursor, int startPosition) {
-
-        int size = cursor.getCount() - startPosition;
-        if (size <= 0)
-            return null;
-
-        String[] paths = new String[size];
-        int dataColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-
-        for (int i = startPosition; i < cursor.getCount(); i++) {
-
-            cursor.moveToPosition(i);
-            paths[i - startPosition] = cursor.getString(dataColumnIndex);
-        }
-
-        return paths;
-    }
-
-    private void exitingCamera() {
-
-        Cursor cursor = loadCursor();
-        String[] paths = getImagePaths(cursor, image_count_before);
-        cursor.close();
-        uploadReceipt(paths);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_PERMISSION) {
-            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(getActivity(), "Camera permission is necessary", Toast.LENGTH_SHORT).show();
-            }
-            if (grantResults[1] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(getActivity(), "Storage permission is necessary", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void uploadReceipt(String[] paths){
-        RestInterface service = Client.getClient().create(RestInterface.class);
-
-        File file = new File(paths[0]);
-        RequestBody requestBody = RequestBody.create(file, MediaType.get("image/*"));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
-        Call<ReceiptResults> call = service.getReceiptResults(body);
-
-        call.enqueue(new Callback<ReceiptResults>() {
-            @Override
-            public void onResponse(Call<ReceiptResults> call, retrofit2.Response<ReceiptResults> response) {
-                Toast.makeText(getActivity(), "Done", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<ReceiptResults> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onFailure: "+t.getMessage());
-            }
-        });
-    }
 }
