@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
     private int image_count_before;
 
     TextView mNameSurnameTV, mPointsTV;
-    Button mUploadReceipt;
+    Button mUploadReceipt, mSeeMarkets;
 
     private static final int PIC_ID = 500;
 
@@ -133,11 +133,20 @@ public class HomeFragment extends Fragment {
         mNameSurnameTV = v.findViewById(R.id.name_surname_text_view);
         mPointsTV = v.findViewById(R.id.points_text_view);
         mUploadReceipt = v.findViewById(R.id.upload_receipt_button);
+        mSeeMarkets = v.findViewById(R.id.markets_button);
 
         mUploadReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), CameraActivity.class);
+                startActivity(i);
+            }
+        });
+
+        mSeeMarkets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), MapsActivity.class);
                 startActivity(i);
             }
         });
