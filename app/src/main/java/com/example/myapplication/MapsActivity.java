@@ -9,13 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -23,14 +24,9 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -40,7 +36,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FusedLocationProviderClient mFusedLocationClient;
     private GoogleMap mMap;
 
-    TextView latText, lngText;
+    Button nearbyMarkets;
+    EditText radiusInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +49,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        latText = findViewById(R.id.latText);
-        lngText = findViewById(R.id.lngText);
+        radiusInput = findViewById(R.id.radius_text);
+        nearbyMarkets = findViewById(R.id.nearby_markets);
+        nearbyMarkets.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getLastLocation();
+            }
+        });
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             public void onComplete(@NonNull Task<Location> task) {
                                 Location location = task.getResult();
                                 requestNewLocationData();
-                                updateTexts(location);
+                                findNearbyMarkets(location);
                             }
                         }
                 );
@@ -124,8 +125,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "requestNewLocationData: ");
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(5000);
-        mLocationRequest.setFastestInterval(5000);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
@@ -141,7 +140,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void updateTexts(Location location) {
         Log.d(TAG, "updateTexts: "+location.getLatitude()+","+location.getLongitude());
-        latText.setText(location.getLatitude()+"");
-        lngText.setText(location.getLongitude()+"");
     }
+
+    private void findNearbyMarkets(Location location){
+        Log.d(TAG, "findNearbyMarkets: ");
+        String radiusStr = radiusInput.getText().toString();
+    }
+
 }
