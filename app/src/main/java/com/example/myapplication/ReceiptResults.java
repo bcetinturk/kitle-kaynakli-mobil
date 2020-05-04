@@ -3,8 +3,7 @@ package com.example.myapplication;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
+import java.util.ArrayList;
 public class ReceiptResults {
     @SerializedName("market_name")
     @Expose
@@ -16,6 +15,6 @@ public class ReceiptResults {
 
     @SerializedName("products")
     @Expose
-    public List<Product> products;
+    public ArrayList<Product> products;
 
 }

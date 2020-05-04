@@ -13,8 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -29,9 +32,24 @@ public class CameraActivity extends FragmentActivity {
     private static final int PIC_ID = 500;
     private int image_count_before;
 
+    private RecyclerView mRecyclerView;
+    ProductListAdapter productListAdapter;
+    ArrayList<Product> mProducts;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.preview_results);
+
+        mProducts = new ArrayList<>();
+
+        mRecyclerView = findViewById(R.id.product_list);
+        productListAdapter = new ProductListAdapter(CameraActivity.this, mProducts);
+        mRecyclerView.setAdapter(productListAdapter);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CameraActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         checkPermissions();
     }
@@ -95,6 +113,7 @@ public class CameraActivity extends FragmentActivity {
             uploadReceipt(paths);
         } else {
             Toast.makeText(this, "No photo was taken", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
     }
@@ -128,7 +147,8 @@ public class CameraActivity extends FragmentActivity {
         call.enqueue(new Callback<ReceiptResults>() {
             @Override
             public void onResponse(Call<ReceiptResults> call, retrofit2.Response<ReceiptResults> response) {
-                Toast.makeText(CameraActivity.this, "Done", Toast.LENGTH_SHORT).show();
+                mProducts = new ArrayList<>(response.body().products);
+                productListAdapter.notifyDataSetChanged();
             }
 
             @Override
